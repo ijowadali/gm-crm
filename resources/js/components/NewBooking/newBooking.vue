@@ -20,8 +20,7 @@
               <el-form-item label="Customer" prop="customer" size="mini">
                 <el-select
                   v-model="newBooking.customer"
-                  :loading="customerLoading"
-                  :remote-method="findCustomer"
+                  allow-create
                   clearable
                   filterable
                   placeholder="Search Customer"
@@ -52,7 +51,7 @@
             <el-col :lg="8" :md="12" :sm="24" class="card-panel-col">
               <el-form-item label="Status" prop="status" size="mini">
                 <el-select
-                  v-model="newBooking.status"
+                  v-model="newBooking.bookingStatus"
                   size="mini"
                   style="width: 100%"
                 >
@@ -357,7 +356,7 @@ export default {
   mixins: [permissions, picker],
   data() {
     return {
-      url: 'bookings',
+      url: 'bookings/',
       loading: false,
       newBooking: {
         status: 'Draft',
@@ -384,7 +383,7 @@ export default {
             type: 'warning',
           }).then(() => {
             this.loading = true;
-            postRequest({ url: this.url, data: this.newSaleOrder }).then(async response => {
+            postRequest({ url: this.url, data: this.newBooking }).then(async response => {
               this.loading = false;
               if (response.status) {
                 this.$message({
@@ -393,7 +392,7 @@ export default {
                   type: 'success',
                 });
                 this.$refs[formName].resetFields();
-                await this.$router.push('/orders/sales_orders/edit/' + response.id);
+                // await this.$router.push('/orders/sales_orders/edit/' + response.id);
               } else {
                 this.$message({
                   showClose: true,

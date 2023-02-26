@@ -4,12 +4,11 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::namespace('Api')->group(function () {
-    Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'Bookings'], function () {
         Route::get('/', 'BookingsController@index');
-        Route::get('/search', 'AreasController@search');
-        Route::put('/{id}', 'AreasController@update');
-        Route::post('/', 'AreasController@create');
-        Route::delete('/{id}', 'AreasController@delete');
-        Route::put('/{id}/status', 'AreasController@updateStatus');
+//        Route::put('/{id}', 'AreasController@update');
+        Route::post('/', 'BookingsController@create');
+//        Route::delete('/{id}', 'AreasController@delete');
+//        Route::put('/{id}/status', 'AreasController@updateStatus');
     });
 });
