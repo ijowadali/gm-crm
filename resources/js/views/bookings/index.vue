@@ -59,15 +59,11 @@
         width="300"
       >
         <template v-slot="{row}">
-          <!--          <el-link v-if="permission(['str transaction link'])" type="primary">-->
-          <!--            <router-link-->
-          <!--              :to="'/warehouse/inventory/'+row.product_id"-->
-          <!--              target="_blank"-->
-          <!--            >-->
-          <!--          {{ row.sku }}-->
-          <!--            </router-link>-->
-          <!--          </el-link>-->
-          <span>{{ row.booking_no }}</span>
+          <router-link :to="'/bookings/add_booking?id='+row.id" target="_blank">
+            <el-link type="success">
+              {{ row.booking_no }}
+            </el-link>
+          </router-link>
         </template>
       </el-table-column>
       <el-table-column

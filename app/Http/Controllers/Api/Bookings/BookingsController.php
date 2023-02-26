@@ -28,24 +28,29 @@ class BookingsController extends Controller
 
     public function create()
     {
-        $getLastBooking = Bookings::query()->orderBy('id', 'desc')->pluck('booking_no')->first();
-        if (!$getLastBooking) {
-            $getLastBooking = 1000000000001;
+        $getLastBooking = null;
+        if (request('booking_no')) {
+            $newBooking = Bookings::query()->where('booking_no', request('booking_no'))->first();
         } else {
-            $getLastBooking = (int)$getLastBooking + 1;
+            $getLastBooking = Bookings::query()->orderBy('id', 'desc')->pluck('booking_no')->first();
+            if (!$getLastBooking) {
+                $getLastBooking = 1000000000001;
+            } else {
+                $getLastBooking = (int)$getLastBooking + 1;
+            }
+            $newBooking = new Bookings();
+            $newBooking->booking_no = $getLastBooking;
         }
-        $newBooking = new Bookings();
-        $newBooking->booking_no = $getLastBooking;
 //        $newBooking->customer_id = request('customer_id');
-        $newBooking->customer_name = request('customer');
-        $newBooking->booking_date = date('Y-m-d', strtotime(request('bookingDate')));
-        $newBooking->booking_status = request('bookingStatus');
-        $newBooking->group_name = request('groupName');
-        $newBooking->group_no = request('groupNumber');
+        $newBooking->customer_name = request('customer_name');
+        $newBooking->booking_date = date('Y-m-d', strtotime(request('booking_date')));
+        $newBooking->booking_status = request('booking_status');
+        $newBooking->group_name = request('group_name');
+        $newBooking->group_no = request('group_no');
         $newBooking->category = request('category');
-        $newBooking->approval_date = date('Y-m-d', strtotime(request('approvalDate')));
-        $newBooking->expected_departure = date('Y-m-d', strtotime(request('expectedDeparture')));
-        $newBooking->confirmed_ticket = request('confirmedTicket') ? 1 : 0;
+        $newBooking->approval_date = date('Y-m-d', strtotime(request('approval_date')));
+        $newBooking->expected_departure = date('Y-m-d', strtotime(request('expected_departure')));
+        $newBooking->confirmed_ticket = request('confirmed_ticket') ? 1 : 0;
         $newBooking->save();
         $this->insertBookingVisaDetails($getLastBooking);
         $this->insertBookingHotelDetails($getLastBooking);
@@ -55,32 +60,52 @@ class BookingsController extends Controller
 
     public function insertBookingVisaDetails($bookingNo)
     {
-        $newBookingVisaDetails = new BookingVisaDetails();
-        $newBookingVisaDetails->booking_no = $bookingNo;
-        $newBookingVisaDetails->iata = request('iata');
-        $newBookingVisaDetails->visa_company = request('visaCompany');
-        $newBookingVisaDetails->visa_status = request('visaStatus');
+        if (request('booking_no')) {
+            $newBookingVisaDetails = BookingVisaDetails::query()->where('booking_no', request('booking_no'))->first();
+        } else {
+            $newBookingVisaDetails = new BookingVisaDetails();
+            $newBookingVisaDetails->booking_no = $bookingNo;
+        }
+        $visa = request('visa');
+        $newBookingVisaDetails->iata = $visa['iata'];
+        $newBookingVisaDetails->visa_company = $visa['visa_company'];
+        $newBookingVisaDetails->visa_status = $visa['visa_status'];
         $newBookingVisaDetails->save();
     }
 
     public function insertBookingHotelDetails($bookingNo)
     {
-        $newBookingHotelDetails = new BookingHotelDetails();
-        $newBookingHotelDetails->booking_no = $bookingNo;
-        $newBookingHotelDetails->room_type = request('roomType');
-        $newBookingHotelDetails->package = request('package');
-        $newBookingHotelDetails->hotel1_name = request('hotel1');
-        $newBookingHotelDetails->nights1 = request('nights1');
-        $newBookingHotelDetails->hotel2_name = request('hotel2');
-        $newBookingHotelDetails->nights2 = request('nights2');
-        $newBookingHotelDetails->hotel3_name = request('hotel3');
-        $newBookingHotelDetails->nights3 = request('nights3');
-        $newBookingHotelDetails->short_booking = request('shortBooking') ? 1 : 0;
-        if (request('shortBooking')) {
-            $newBookingHotelDetails->adults = request('adults');
-            $newBookingHotelDetails->childs = request('childs');
-            $newBookingHotelDetails->infants = request('infants');
+        if (request('booking_no')) {
+            $newBookingHotelDetails = BookingHotelDetails::query()->where('booking_no', request('booking_no'))->first();
+        } else {
+            $newBookingHotelDetails = new BookingHotelDetails();
+            $newBookingHotelDetails->booking_no = $bookingNo;
+        }
+        $hotel = request('hotel');
+        $newBookingHotelDetails->room_type = $hotel['room_type'];
+        $newBookingHotelDetails->package = $hotel['package'];
+        $newBookingHotelDetails->hotel1_name = $hotel['hotel1_name'];
+        $newBookingHotelDetails->nights1 = $hotel['nights1'];
+        $newBookingHotelDetails->hotel2_name = $hotel['hotel2_name'];
+        $newBookingHotelDetails->nights2 = $hotel['nights2'];
+        $newBookingHotelDetails->hotel3_name = $hotel['hotel3_name'];
+        $newBookingHotelDetails->nights3 = $hotel['nights3'];
+        $newBookingHotelDetails->short_booking = $hotel['short_booking'] ? 1 : 0;
+        if ($hotel['short_booking']) {
+            $newBookingHotelDetails->adults = $hotel['adults'];
+            $newBookingHotelDetails->childs = $hotel['childs'];
+            $newBookingHotelDetails->infants = $hotel['infants'];
         }
         $newBookingHotelDetails->save();
+    }
+
+    public function getBookingData($id)
+    {
+        $data = Bookings::query()->where('id', $id)
+            ->with(['visa', 'hotel'])->first();
+        if (!$data) {
+            return ['status' => false, 'message' => 'Booking Not Found'];
+        }
+        return ['status' => true, 'data' => $data];
     }
 }
