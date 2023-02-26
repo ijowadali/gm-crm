@@ -24,6 +24,12 @@ const bookingsRoutes = {
       name: 'addBooking',
       meta: { title: 'addBooking', icon: 'el-icon-plus', permissions: ['add booking'] },
     },
+    {
+      path: 'print_booking',
+      component: () => import('@/views/bookings/printBooking.vue'),
+      name: 'printBooking',
+      meta: { title: 'printBooking', icon: 'el-icon-plus', permissions: ['print booking'] },
+    },
   ],
 };
 

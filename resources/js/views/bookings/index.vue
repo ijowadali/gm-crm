@@ -96,19 +96,18 @@
         width="140"
       >
         <template v-slot="{row}">
-          <!--          <el-dropdown v-if="(row.status !== 'Completed')" trigger="click">-->
-          <!--            <span class="el-dropdown-link">-->
-          <!--              Actions<i class="el-icon-arrow-down el-icon&#45;&#45;right" />-->
-          <!--            </span>-->
-          <!--            <el-dropdown-menu slot="dropdown">-->
-          <!--              <span-->
-          <!--                v-if="salesOrder.status === 'Draft' && permission(['sales order delete item'])"-->
-          <!--                @click="deleteOrderItem(row.id)"-->
-          <!--              >-->
-          <!--                <el-dropdown-item icon="el-icon-delete">Delete</el-dropdown-item>-->
-          <!--              </span>-->
-          <!--            </el-dropdown-menu>-->
-          <!--          </el-dropdown>-->
+          <el-dropdown v-if="(row.status !== 'Completed')" trigger="click">
+            <span class="el-dropdown-link">
+              Actions<i class="el-icon-arrow-down el-icon--right" />
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <router-link :to="'/bookings/print_booking?id='+row.id" target="_blank">
+                <el-link type="success">
+                  <el-dropdown-item icon="el-icon-tickets">Print Voucher</el-dropdown-item>
+                </el-link>
+              </router-link>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
