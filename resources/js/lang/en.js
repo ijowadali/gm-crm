@@ -74,6 +74,9 @@ export default {
     bookings: 'Bookings',
     bookingsList: 'Bookings List',
     addBooking: 'Add Booking',
+    hotels: 'Hotels',
+    hotelsList: 'Hotels List',
+    addHotels: 'Add Hotel',
   },
   navbar: {
     logOut: 'Log Out',

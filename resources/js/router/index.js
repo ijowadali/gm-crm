@@ -12,6 +12,7 @@ import voucherRoutes from './modules/voucher';
 // import nestedRoutes from './modules/nested';
 import errorRoutes from './modules/error';
 import bookingsRoutes from '@/router/modules/bookings';
+import hotelsRoutes from '@/router/modules/hotels';
 
 /**
  * Layzloading will create many files and slow on compiling, so best not to use lazyloading on devlopment.
@@ -142,6 +143,7 @@ export const asyncRoutes = [
   // nestedRoutes,
   // tableRoutes,
   bookingsRoutes,
+  hotelsRoutes,
   voucherRoutes,
   adminRoutes,
   // {

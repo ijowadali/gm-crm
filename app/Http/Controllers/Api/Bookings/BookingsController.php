@@ -108,4 +108,14 @@ class BookingsController extends Controller
         }
         return ['status' => true, 'data' => $data];
     }
+
+    public function delete($id)
+    {
+        $data = Bookings::query()->find($id);
+        if (!$data) {
+            return ['status' => false, 'message' => 'Booking Not Found'];
+        }
+        $data->delete();
+        return ['status' => true, 'message' => 'Deleted Successfully'];
+    }
 }

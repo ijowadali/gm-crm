@@ -3,9 +3,16 @@
     <el-row :gutter="10" class="panel-group" style="margin-top:0;margin-bottom: 5px">
       <el-col :lg="3" :sm="12" :xs="24" class="card-panel-col">
         <el-input
-          v-model="pageFilters.bookingNo"
+          v-model="pageFilters.city"
           clearable
-          placeholder="Order No"
+          placeholder="City"
+          size="mini"
+          style="width: 100%"
+        />
+        <el-input
+          v-model="pageFilters.hotel_name"
+          clearable
+          placeholder="Name"
           size="mini"
           style="width: 100%"
         />
@@ -52,40 +59,57 @@
     >
       <el-table-column
         align="center"
-        label="Booking No"
-        prop="booking_no"
+        label="Hotel Name"
+        prop="hotel_name"
         show-overflow-tooltip
         sortable="custom"
-        width="300"
       >
         <template v-slot="{row}">
-          <router-link :to="'/bookings/add_booking?id='+row.id" target="_blank">
+          <router-link :to="'/hotels/add_hotel?id='+row.id" target="_blank">
             <el-link type="success">
-              {{ row.booking_no }}
+              {{ row.hotel_name }}
             </el-link>
           </router-link>
         </template>
       </el-table-column>
       <el-table-column
         align="center"
-        label="Customer"
-        prop="quantity"
+        label="City"
+        prop="city"
         sortable="custom"
-        width="200"
       >
         <template v-slot="{row}">
-          <el-tag type="primary">{{ row.customer_name }}</el-tag>
+          <el-tag type="primary">{{ row.city }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
         align="center"
-        label="Group"
-        prop="group"
+        label="Primary Phone"
+        prop="primary_phone"
         sortable="custom"
-        width="200"
       >
         <template v-slot="{row}">
-          <el-tag type="primary">{{ row.group_name }}</el-tag>
+          {{ row.primary_phone }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="Secondary Phone"
+        prop="secondary_phone"
+        sortable="custom"
+      >
+        <template v-slot="{row}">
+          {{ row.secondary_phone }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="Address"
+        prop="address"
+        sortable="custom"
+      >
+        <template v-slot="{row}">
+          {{ row.address }}
         </template>
       </el-table-column>
       <el-table-column
@@ -93,7 +117,6 @@
         label="Action"
         prop="status"
         sortable="custom"
-        width="140"
       >
         <template v-slot="{row}">
           <el-dropdown v-if="(row.status !== 'Completed')" trigger="click">
@@ -101,14 +124,15 @@
               Actions<i class="el-icon-arrow-down el-icon--right" />
             </span>
             <el-dropdown-menu v-slot="dropdown">
-              <router-link :to="'/bookings/print_booking?id='+row.id" target="_blank">
+              <router-link :to="'/hotels/add_hotel?id='+row.id" target="_blank">
                 <el-link type="success">
-                  <el-dropdown-item icon="el-icon-tickets">Print Voucher</el-dropdown-item>
-                  <el-dropdown-item icon="el-icon-tickets">Edit</el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-edit">Edit</el-dropdown-item>
                 </el-link>
               </router-link>
-              <span @click="deleteBooking(row.id)">
-                <el-dropdown-item icon="el-icon-tickets">Delete</el-dropdown-item>
+              <span @click="deleteHotel(row.id)">
+                <el-dropdown-item
+                  icon="el-icon-delete"
+                >Delete</el-dropdown-item>
               </span>
             </el-dropdown-menu>
           </el-dropdown>
@@ -124,7 +148,7 @@
       :total="listQuery.total"
       @pagination="getList(false)"
     />
-    <router-link :to="'/bookings/add_booking'">
+    <router-link :to="'/hotels/add_hotel'">
       <el-button
         circle
         class="add-new-button"
@@ -143,12 +167,12 @@ import { list } from '@/mixins/list';
 import { deleteRequest } from '@/api/custom';
 
 export default {
-  name: 'BookingsList',
+  name: 'HotelList',
   // components: { Pagination },
   mixins: [list],
   data() {
     return {
-      listUrl: 'bookings/',
+      listUrl: 'hotels/',
       total: 0,
       listLoading: true,
       listQuery: {
@@ -161,7 +185,7 @@ export default {
     await this.getList(true);
   },
   methods: {
-    async deleteBooking(id) {
+    async deleteHotel(id) {
       const response = await deleteRequest(this.listUrl + id);
       if (response.status) {
         this.$message({

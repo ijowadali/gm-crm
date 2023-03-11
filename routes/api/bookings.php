@@ -9,7 +9,7 @@ Route::namespace('Api')->group(function () {
 //        Route::put('/{id}', 'AreasController@update');
         Route::get('/{id}', 'BookingsController@getBookingData');
         Route::post('/', 'BookingsController@create');
-//        Route::delete('/{id}', 'AreasController@delete');
+        Route::delete('/{id}', 'BookingsController@delete');
 //        Route::put('/{id}/status', 'AreasController@updateStatus');
     });
 });
