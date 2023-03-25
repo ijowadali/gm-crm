@@ -14,7 +14,7 @@
           <h4 style="margin: 0px 0px;">Booking Details</h4>
         </div>
         <div style="padding: 10px">
-          <el-divider content-position="left"><h3>Booking Details</h3></el-divider>
+          <!--          <el-divider content-position="left"><h3>Booking Details</h3></el-divider>-->
           <el-row :gutter="15">
             <el-col :lg="8" :md="12" :sm="24" class="card-panel-col">
               <el-form-item label="Customer" prop="customer_name" size="mini">
@@ -342,11 +342,16 @@
             </el-col>
           </el-row>
         </div>
+        <el-row :gutter="10">
+          <el-button type="primary">Add Mutamer</el-button>
+        </el-row>
+        <el-row :gutter="10">
+          <el-form-item>
+            <el-button type="primary" @click="submitForm('newBooking')">Create</el-button>
+            <el-button @click="resetForm('newBooking')">Reset</el-button>
+          </el-form-item>
+        </el-row>
       </el-card>
-      <el-form-item>
-        <el-button type="primary" @click="submitForm('newBooking')">Create</el-button>
-        <el-button @click="resetForm('newBooking')">Reset</el-button>
-      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -368,6 +373,7 @@ export default {
         customer: '',
         visa: {},
         hotel: {},
+        mutamer: [],
       },
       rules: {
         customer_name: [
